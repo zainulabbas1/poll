@@ -76,13 +76,16 @@ class PollController extends Controller
 
     public  function report($id)
     {
-        $data = Question::with('options')->where('id', $id)->get();
-        $option = "";
-        foreach ($data[0]->options as $d){
-            $option .="['".$d->answer."',".$d->count."],";
+        if (count(Vote::where('question_id', $id)->get())>0){
+            $data = Question::with('options')->where('id', $id)->get();
+            $option = "";
+            foreach ($data[0]->options as $d){
+                $option .="['".$d->answer."',".$d->count."],";
+            }
+            $option = rtrim($option, ",");
+            $chart['option']=$option;
+            return View("reports", $chart, compact('data'));
         }
-        $option = rtrim($option, ",");
-        $chart['option']=$option;
-        return View("reports", $chart, compact('data'));
+        return Redirect::back()->withErrors(['msg' => 'No one voted yet.']);
     }
 }
