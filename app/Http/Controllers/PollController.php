@@ -88,4 +88,10 @@ class PollController extends Controller
         }
         return Redirect::back()->withErrors(['msg' => 'No one voted yet.']);
     }
+
+    public function geturl($id)
+    {
+        $url = "http://127.0.0.1:8000/poll/".$id;
+        return view('submit', compact('url'));
+    }
 }

@@ -45,4 +45,4 @@ Route::POST('edit/update', [PollController::class,'update']);
 Route::get('delete/{id}', [PollController::class,'delete']);
 Route::get('report/{id}', [PollController::class,'report'])->name('report');
 Route::view('report', 'reports');
-Route::get('url', [PollController::class,'geturl'])->name('url');
+Route::get('url/{id}', [PollController::class,'geturl'])->name('url');

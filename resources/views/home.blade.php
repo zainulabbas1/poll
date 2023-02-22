@@ -20,7 +20,7 @@
       <div id="options">
         <div  class="col-md-3 remov input-group w-25" style="margin: 20px">
           <input type="text" name="option[]" size="50%" class="form-control" placeholder="Enter option" required>
-          <button type="button" name="remove" class="btn btn-danger remove-option ">remove</button>
+          {{-- <button type="button" name="remove" class="btn btn-danger remove-option ">remove</button> --}}
         <button type="button" name="add" class="btn btn-success add-option">Add More</button>
         </div>
         <div  class="col-md-3 remov input-group w-25" style="margin: 20px">
@@ -48,6 +48,7 @@
       <th scope="col" style="width: 10%">Report</th>
       <th scope="col" style="width: 10%">Update</th>
       <th scope="col" style="width: 10%">Delete</th>
+      <th scope="col" style="width: 10%">Poll Url</th>
     </tr>
   </thead>
   <tbody>
@@ -65,6 +66,9 @@
         <td><a href="delete/{{$data->id}}">
           <button class="btn btn-danger">Delete</button>
           </a></td>
+          <td><a href="url/{{$data->id}}">
+            <button class="btn btn-secondary">Link</button>
+            </a></td>
     </tr>
     @endforeach
   </tbody>
