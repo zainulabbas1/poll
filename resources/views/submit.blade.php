@@ -9,7 +9,7 @@
         </div>
         <div >
         <input type="text" size="50" value={{$url}} id="myInput" >
-        <button onclick="myFunction()" class="btn btn-primary">Copy text</button>
+        <button onclick="createPieChart()" class="btn btn-primary">Copy text</button>
         <a href="/home">
             <button class="btn btn-secondary">Back</button>
         </a>
@@ -18,7 +18,7 @@
 </div>
 <script type="text/javascript">
    
-function myFunction() {
+function createPieChart() {
     var copyText = document.getElementById("myInput");
     copyText.select();
     copyText.setSelectionRange(0, 99999);

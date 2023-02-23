@@ -18,7 +18,7 @@ use App\Http\Controllers\PollController;
 Route::get('/poll/{id}', [PollController::class, 'vote'])->name('poll');
 
 Route::get('/', function () {
-    return view('/auth/login    ');
+    return view('/auth/login');
 });
 
 Route::group(['middleware' => ['auth']], function() {
@@ -34,15 +34,22 @@ Route::group(['middleware' => ['auth']], function() {
 // Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('verified');
 
 Auth::routes(['verify' => true]);
-Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('verified');
-Route::POST('poll', [PollController::class, 'save']);
-Route::get('vote', function () {
-    return view('vote');
-});
-Route::POST('/submit', [PollController::class, 'submit'])->name('submit');
-Route::get('edit/{id}', [PollController::class,'edit'])->name('edit');
-Route::POST('edit/update', [PollController::class,'update']);
-Route::get('delete/{id}', [PollController::class,'delete']);
-Route::get('report/{id}', [PollController::class,'report'])->name('report');
-Route::view('report', 'reports');
+Route::post('poll', [PollController::class, 'save']);
+
 Route::get('url/{id}', [PollController::class,'geturl'])->name('url');
+
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('verified');
+    Route::get('vote', function () {
+        return view('vote');
+    });
+    Route::post('/submit', [PollController::class, 'submit'])->name('submit');
+    Route::get('edit/{id}', [PollController::class,'edit'])->name('edit');
+    Route::post('edit/update', [PollController::class,'update']);
+    Route::get('delete/{id}', [PollController::class,'delete'])->name('delete');
+    Route::get('report/{id}', [PollController::class,'report'])->name('report');
+    Route::view('report', 'reports');
+   // more route definitions
+
+});

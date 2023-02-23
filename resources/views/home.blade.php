@@ -52,21 +52,20 @@
     </tr>
   </thead>
   <tbody>
-    
     @foreach($data as $key=>$data)
     <tr class=".w-auto" >
       <th scope="row" style="color:rgb(0, 0, 0)">{{++$key}}</th>
       <td style="color:rgb(0, 0, 0)">{{$data->question}}</td>
-      <td><a href="report/{{$data->id}}">
+      <td><a href="{{route('report',$data->id)}}">
         <button class="btn btn-success">Report</button>
         </a></td>
-      <td><a href="edit/{{$data->id}}">
+      <td><a href="{{route('edit',$data->id)}}">
         <button class="btn btn-primary">Edit</button>
         </a></td>
-        <td><a href="delete/{{$data->id}}">
+        <td><a href="{{route('delete',$data->id)}}">
           <button class="btn btn-danger">Delete</button>
           </a></td>
-          <td><a href="url/{{$data->id}}">
+          <td><a href="{{route('url',$data->id)}}">
             <button class="btn btn-secondary">Link</button>
             </a></td>
     </tr>

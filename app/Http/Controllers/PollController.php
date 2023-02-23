@@ -17,11 +17,11 @@ class PollController extends Controller
     //
     public function save(Request $request)
     {
-        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time]);
+        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time,'is_delete',0]);
         foreach ($request->option as $op) {
             Option::create(['question_id'=>$q->id, 'answer'=>$op]);
         }
-        $url="http://127.0.0.1:8000/poll/".$q->id;
+        $url=url()->current().'/'.$q->id;
         return view("submit", compact('url'));
     }
 
@@ -29,7 +29,8 @@ class PollController extends Controller
     {
         $mytime = Carbon\Carbon::now();
         $mytime = $mytime->toDateTimeString();
-        $data = Question::with('options')->where('id', $id)->where('start_time', '<=', $mytime)->where('end_time', '>=', $mytime)->get();
+        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)
+        ->where('start_time', '<=', $mytime)->where('end_time', '>=', $mytime)->get();
         if ($data->isEmpty()) {
             return redirect('vote')->withErrors(['msg'=>'May be the poll is Expired or not Activated.']);
         }
@@ -52,13 +53,17 @@ class PollController extends Controller
 
     public function edit($id)
     {
-        $data = Question::with('options')->where('id', $id)->get();
+        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)->get();
+        if ($data->isEmpty()) {
+            return redirect('home')->withErrors(['msg' => 'No record of that question']);
+        }
         return View("edit", compact('data'));
     }
 
     public function update(Request $request)
     {
-        Question::where('id', $request->q_id)->update(['question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time]);
+        Question::where('id', $request->q_id)->update(['question'=>$request->question,
+        'start_time'=>$request->start_time,'end_time'=>$request->end_time]);
         Option::where('question_id', $request->q_id)->delete('question_id', $request->q_id);
         foreach ($request->option as $op) {
             Option::create(['question_id'=>$request->q_id, 'answer'=>$op]);
@@ -68,9 +73,7 @@ class PollController extends Controller
 
     public function delete($id)
     {
-        Option::where('question_id', $id)->delete();
-        Question::where('id', $id)->delete();
-        Vote::where('question_id', $id)->delete();
+        Question::where('id', $id)->update(['is_delete'=>1]);
         return Redirect::back()->withErrors(['msg'=>'deleted successfully']);
     }
 
@@ -91,7 +94,7 @@ class PollController extends Controller
 
     public function geturl($id)
     {
-        $url = "http://127.0.0.1:8000/poll/".$id;
+        $url = str_replace("url", "poll", url()->current());
         return view('submit', compact('url'));
     }
 }

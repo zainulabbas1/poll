@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('votes', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('email');
+        Schema::create('options', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->integer('question_id');
-            $table->integer('option_id');
+            $table->string('answer');
+            $table->integer('count')->default(0);
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('options');
     }
 };
