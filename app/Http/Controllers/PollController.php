@@ -17,7 +17,7 @@ class PollController extends Controller
     //
     public function save(Request $request)
     {
-        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time,'is_delete',0]);
+        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time,'is_delete'=>0]);
         foreach ($request->option as $op) {
             Option::create(['question_id'=>$q->id, 'answer'=>$op]);
         }
