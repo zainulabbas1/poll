@@ -53,9 +53,9 @@ class PollController extends Controller
 
     public function edit($id)
     {
-        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)->get();
+        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)->where('user_id', Auth::id())->get();
         if ($data->isEmpty()) {
-            return redirect('home')->withErrors(['msg' => 'No record of that question']);
+            return redirect('home')->withErrors(['msg' => 'May be the record is deleted or you are not creater of this poll.']);
         }
         return View("edit", compact('data'));
     }
