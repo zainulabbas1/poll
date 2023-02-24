@@ -59,7 +59,7 @@ class PollController extends Controller
         return View("edit", compact('data'));
     }
 
-    public function update(Request $request)
+    public function update(StorePollRequest $request)
     {
         Question::where('id', $request->q_id)->update(['question'=>$request->question,
         'start_time'=>$request->start_time,'end_time'=>$request->end_time]);

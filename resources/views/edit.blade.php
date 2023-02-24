@@ -4,7 +4,7 @@
 
 <body style="background-color:rgb(255, 255, 255)">
   @if($errors->any())
-<div class="alert alert-success alert-dismissible fade show" role="alert">
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>{{$errors->first()}}</strong>
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -18,16 +18,22 @@
         <input type="text" name="question" class="form-control " value="{{$data[0]->question}}" placeholder="Enter question" required>
         <input type="hidden" name="q_id" value="{{$data[0]->id}}" />
       </div>
-      @foreach($data[0]->options as $d)
-      <div>
-        <div  class="col-md-3 remov input-group w-25" style="margin: 20px">
+     
+      <div id="options1">
+        @foreach($data[0]->options as $key=>$d)
+        <div id="options1" class="col-md-3 remov input-group w-25" style="margin: 20px">
           <input type="text" name="option[]" class="form-control" value="{{$d->answer}}" placeholder="Enter option" required>
+          @if($key>1)
           <button type="button" name="remove" class="btn btn-danger remove-option ">remove</button>
+          @endif
           <button type="button" name="add" class="btn btn-success add-option">Add More</button>
         </div>
+        @endforeach
       </div>
-      @endforeach
-      <div id="options"></div>
+     
+      <div id="options">
+
+      </div>
     </div>
     <div style="margin-left:20px;color:white">
       <label>From</label>
@@ -42,8 +48,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
             $('.add-option').click(function() {
-                var option = $('<div  class="col-md-2 remov input-group w-25" style="margin: 20px"><input type="text" name="option[]" class="form-control" placeholder="Enter option" required><button type="button" name="remove" class="btn btn-danger remove-option">remove</button></div>');
+                var option = $('<div id="options" class="col-md-2 remov input-group w-25" style="margin: 20px"><input type="text" name="option[]" class="form-control" placeholder="Enter option" required><button type="button" name="remove" class="btn btn-danger remove-option">remove</button></div>');
                 $('#options').append(option);
+            });
+            $('#options1').on('click', '.remove-option', function() {
+                $(this).closest('.remov').remove();
             });
             $('#options').on('click', '.remove-option', function() {
                 $(this).closest('.remov').remove();
