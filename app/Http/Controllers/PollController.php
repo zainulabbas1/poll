@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Requests\StorePollRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Option;
@@ -15,9 +17,9 @@ use function PHPUnit\Framework\isEmpty;
 class PollController extends Controller
 {
     //
-    public function save(Request $request)
+    public function save(StorePollRequest $request)
     {
-        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time,'is_delete'=>0]);
+        $q=Question::create(['user_id'=>Auth::id(),'question'=>$request->question,'start_time'=>$request->start_time,'end_time'=>$request->end_time]);
         foreach ($request->option as $op) {
             Option::create(['question_id'=>$q->id, 'answer'=>$op]);
         }
@@ -29,7 +31,7 @@ class PollController extends Controller
     {
         $mytime = Carbon\Carbon::now();
         $mytime = $mytime->toDateTimeString();
-        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)
+        $data = Question::with('options')->where('id', $id)
         ->where('start_time', '<=', $mytime)->where('end_time', '>=', $mytime)->get();
         if ($data->isEmpty()) {
             return redirect('vote')->withErrors(['msg'=>'May be the poll is Expired or not Activated.']);
@@ -44,16 +46,13 @@ class PollController extends Controller
             return Redirect::back()->with('status', 'Already Voted');
         }
         Vote::create(['email'=>$request->email,'question_id'=>$request->q_id,'option_id'=>$request->optionsRadios]);
-        $count = Option::select('count')->where('id', $request->optionsRadios)->first();
-       
-        $count1 = $count->count + 1;
-        Option::where('id', $request->optionsRadios)->update(array('count' => $count1));
+        Option::find($request->optionsRadios)->increment('count');
         return Redirect::back()->with('status', 'Vote Submitted');
     }
 
     public function edit($id)
     {
-        $data = Question::with('options')->where('id', $id)->where('is_delete', 0)->where('user_id', Auth::id())->get();
+        $data = Question::with('options')->where('id', $id)->where('user_id', Auth::id())->get();
         if ($data->isEmpty()) {
             return redirect('home')->withErrors(['msg' => 'May be the record is deleted or you are not creater of this poll.']);
         }
@@ -73,7 +72,7 @@ class PollController extends Controller
 
     public function delete($id)
     {
-        Question::where('id', $id)->update(['is_delete'=>1]);
+        Question::where('id', $id)->delete();
         return Redirect::back()->withErrors(['msg'=>'deleted successfully']);
     }
 

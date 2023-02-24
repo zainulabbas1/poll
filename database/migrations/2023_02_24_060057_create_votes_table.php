@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('votes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->comment('');
+            $table->increments('id');
             $table->string('email');
             $table->integer('question_id');
             $table->integer('option_id');

@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('options', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->comment('');
+            $table->increments('id');
             $table->integer('question_id');
             $table->string('answer');
             $table->integer('count')->default(0);

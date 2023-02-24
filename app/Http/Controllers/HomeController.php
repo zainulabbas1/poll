@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Question::where('user_id', Auth::id())->where('is_delete',0)->get();
+        $data = Question::where('user_id', Auth::id())->get();
         $url = "";
         return view('home', compact('data', 'url'));
     }
